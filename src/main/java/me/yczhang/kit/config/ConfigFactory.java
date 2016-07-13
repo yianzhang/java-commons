@@ -309,7 +309,8 @@ public class ConfigFactory {
 				String propName = meta.propName();
 				String defValue = StringUtil.isBlank(meta.defValue(), null);
 				boolean isAllowedNull = meta.isAllowedNull();
-				String parserKlass = StringUtil.isBlank(meta.parser(), null);
+				Class parserKlass = meta.parserKlass();
+				String parserKlassName = StringUtil.isBlank(meta.parser(), null);
 				String valueStr = props.getValue(propName, profiles);
 				Object[] refValues = ArrayUtils.isEmpty(meta.refFields())? null : Stream.of(meta.refFields()).filter(fields::containsKey).map(x -> {
 					try {
@@ -324,9 +325,15 @@ public class ConfigFactory {
 					ConfigPropParser parser = parsers.get(fieldName);
 					value = parser.parse(ObjUtil.isNull(valueStr, defValue), refValues);
 				}
-				else if (parserKlass != null) {
-					ConfigPropParser parser = (ConfigPropParser) Class.forName(parserKlass).newInstance();
-					value = parser.parse(ObjUtil.isNull(valueStr, defValue), refValues);
+				else if (!parserKlass.isInterface() || parserKlassName != null) {
+					if (!parserKlass.isInterface()) {
+						ConfigPropParser parser = (ConfigPropParser) parserKlass.newInstance();
+						value = parser.parse(ObjUtil.isNull(valueStr, defValue), refValues);
+					}
+					else {
+						ConfigPropParser parser = (ConfigPropParser) Class.forName(parserKlassName).newInstance();
+						value = parser.parse(ObjUtil.isNull(valueStr, defValue), refValues);
+					}
 				}
 				else {
 					value = StringUtil.parse(field.getType(), ObjUtil.isNull(valueStr, defValue));

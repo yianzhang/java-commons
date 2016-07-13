@@ -5,6 +5,7 @@ import java.util.Collection;
 /**
  * Created by YCZhang on 1/4/16.
  */
+@Deprecated
 public class MathUtil {
 
 	public static int sqr(int a) {

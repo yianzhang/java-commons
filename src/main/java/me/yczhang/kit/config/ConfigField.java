@@ -16,30 +16,37 @@ public @interface ConfigField {
 	 * 属性名
 	 * @return
 	 */
-	public String propName();
+	String propName();
 
 	/**
 	 * 默认值
 	 * @return
 	 */
-	public String defValue() default "";
+	String defValue() default "";
 
 	/**
 	 * 是否允许为null
 	 * @return
 	 */
-	public boolean isAllowedNull() default true;
+	boolean isAllowedNull() default true;
+
+	/**
+	 * 解析类
+	 * @return
+	 */
+	Class<? extends ConfigPropParser> parserKlass() default ConfigPropParser.class;
 
 	/**
 	 * 解析类的类名，需要实现ConfigPropParser
 	 * @return
 	 */
-	public String parser() default "";
+	@Deprecated
+	String parser() default "";
 
 	/**
 	 * 依赖的字段
 	 * @return
 	 */
-	public String[] refFields() default {};
+	String[] refFields() default {};
 
 }

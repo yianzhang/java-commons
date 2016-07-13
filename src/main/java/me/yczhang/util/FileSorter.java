@@ -101,6 +101,16 @@ public class FileSorter {
 	/**
 	 * 增加需要排序的文件
 	 * @param source
+	 * @return
+	 */
+	public FileSorter addSource(@Nonnull File source) {
+		this.sources.put(source, Tuple.of(null, null, null));
+		return this;
+	}
+
+	/**
+	 * 增加需要排序的文件
+	 * @param source
 	 * @param transformation
 	 * @return
 	 */
@@ -226,7 +236,8 @@ public class FileSorter {
 
 		if (sink.exists() && sink.isFile())
 			sink.delete();
-		sink.getParentFile().mkdirs();
+		if (sink.getParentFile() != null)
+			sink.getParentFile().mkdirs();
 		new File(tempDir + "/" + i + "/0").renameTo(sink);
 
 		FileUtil.del(tempDir);
